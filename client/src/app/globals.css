@@ -1,0 +1,232 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0, 0%, 100%;
+    --foreground: 223, 84%, 5%;
+
+    --card: 0, 0%, 100%;
+    --card-foreground: 223, 84%, 5%;
+
+    --popover: 0, 0%, 100%;
+    --popover-foreground: 223, 84%, 5%;
+
+    --primary: 223, 100%, 50%;
+    --primary-foreground: 87, 100%, 98%;
+
+    --secondary: 210, 40%, 96%;
+    --secondary-foreground: 222, 47%, 11%;
+
+    --muted: 210, 40%, 96%;
+    --muted-foreground: 215, 16%, 47%;
+
+    --accent: 210, 40%, 96%;
+    --accent-foreground: 222, 47%, 11%;
+
+    --destructive: 0, 84%, 60%;
+    --destructive-foreground: 210, 40%, 98%;
+
+    --border: 214, 32%, 91%;
+    --input: 214, 32%, 91%;
+    --ring: 223, 100%, 50%;
+
+    --radius: 8px;
+  }
+
+  .dark {
+    --background: 220, 86%, 3%;
+    --foreground: 87, 100%, 98%;
+
+    --card: 213, 32%, 11%;
+    --card-foreground: 87, 100%, 98%;
+
+    --popover: 213, 32%, 11%;
+    --popover-foreground: 87, 100%, 98%;
+
+    --primary: 223, 100%, 50%;
+    --primary-foreground: 87, 100%, 98%;
+
+    --secondary: 213, 32%, 11%;
+    --secondary-foreground: 87, 100%, 98%;
+
+    --muted: 213, 32%, 11%;
+    --muted-foreground: 215, 20%, 65%;
+
+    --accent: 213, 32%, 11%;
+    --accent-foreground: 87, 100%, 98%;
+
+    --destructive: 0, 63%, 31%;
+    --destructive-foreground: 87, 100%, 98%;
+
+    --border: 220, 18%, 13%;
+    --input: 222, 49%, 15%;
+    --ring: 223, 100%, 50%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-border text-foreground;
+  }
+}
+
+section {
+  @apply !bg-transparent;
+
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  margin: 0 !important;
+}
+
+section > * {
+  @apply !bg-transparent;
+}
+
+section::-webkit-scrollbar {
+  width: 0.1px;
+}
+
+section::-webkit-scrollbar-thumb {
+  background-color: transparent;
+}
+
+* {
+  scroll-behavior: smooth;
+  scrollbar-width: 7px;
+  -ms-overflow-style: none;
+}
+
+*::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+*::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  @apply bg-border rounded-full;
+}
+
+.gutter::after {
+  content: '';
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  width: 7px;
+  height: 7px;
+  background: transparent;
+  z-index: 100;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type='number'] {
+  -moz-appearance: textfield;
+}
+
+@keyframes logo-spin-animation {
+  0% {
+    transform: scale(0.5) rotate(0);
+  }
+  50% {
+    transform: scale(1) rotate(0);
+  }
+  100% {
+    transform: scale(0.5) rotate(360deg);
+  }
+}
+
+.logo-loading {
+  animation-name: logo-spin-animation;
+  animation-duration: 1.5s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+
+span[style='color: rgb(56, 58, 66);'] {
+  @apply !text-foreground;
+}
+
+span:not([class]):not([id]):not([style]) {
+  @apply !text-foreground;
+}
+
+.markdown * {
+  @apply text-foreground;
+}
+
+.remove-child-bg *:not(#skeleton):not(#pie-chart-legend) {
+  @apply !bg-transparent;
+}
+
+.remove-child-border *:not(#skeleton):not(#pie-chart-legend) {
+  @apply !border-none;
+}
+
+.react-grid-item.react-grid-placeholder {
+  @apply !rounded-lg !border !border-dashed !border-foreground/50 !bg-transparent;
+}
+
+.react-grid-item .react-resizable-handle {
+  @apply !bg-transparent;
+  background-image: none;
+}
+
+.react-grid-item .react-resizable-handle::after {
+  @apply !hidden;
+}
+
+.react-grid-item .handle {
+  @apply !hidden;
+}
+
+.react-grid-item:hover .handle {
+  @apply !block;
+}
+
+.display-hidden {
+  visibility: hidden;
+}
+
+.thread-item:hover .display-hidden {
+  visibility: visible;
+}
+
+.background-linear {
+  background: linear-gradient(90deg, rgba(244, 247, 250, 0) 0%, #f4f7fa 45.56%);
+}
+
+.dark .background-linear {
+  background: linear-gradient(90deg, rgba(15, 22, 31, 0) 0%, #0f161f 45.56%);
+}
+
+.scroll-down-shadow {
+  box-shadow: 0px 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0px 2px 4px -2px rgba(0, 0, 0, 0.1);
+}
+
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+.animate-blink {
+  animation: blink 1.5s linear infinite;
+}

@@ -1,0 +1,19 @@
+{
+  "name": "run_nl_query",
+  "description": "Run a query using Natural Language in English in a data source",
+  "strict": false,
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "natural_language_query": {
+        "type": "string",
+        "description": "The english natural language query to run"
+      },
+      "dataSource_id": {
+        "type": "string",
+        "description": "The ID of the data source to use"
+      }
+    },
+    "required": ["natural_language_query", "dataSource_id"]
+  }
+}

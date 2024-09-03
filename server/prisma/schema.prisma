@@ -1,0 +1,183 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model DataSource {
+  id               String    @id @default(uuid())
+  name             String
+  isReady          Boolean   @default(false) @map("is_ready")
+  engine           Engines
+  schema           Json?
+  rawSchema        String?   @map("raw_schema")
+  ownerId          String?   @map("owner_id")
+  workspaceId      String?   @map("workspace_id")
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @default(now()) @updatedAt @map("updated_at")
+  deletedAt        DateTime? @map("deleted_at")
+  lastSyncAt       DateTime? @map("last_sync_at")
+  isDemo           Boolean   @default(false) @map("is_demo")
+  context          Json?
+  dataSourceMemory Json?     @map("data_source_memory")
+  description      String?
+
+  owner     User?      @relation(fields: [ownerId], references: [id])
+  workspace Workspace? @relation(fields: [workspaceId], references: [id])
+  reports   Report[]
+}
+
+model Thread {
+  id               String    @id @default(uuid())
+  title            String
+  ownerId          String?   @map("owner_id")
+  workspaceId      String    @map("workspace_id")
+  externalThreadId String?   @unique @map("external_thread_id")
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @default(now()) @updatedAt @map("updated_at")
+  deletedAt        DateTime? @map("deleted_at")
+  reports          Report[]
+  owner            User?     @relation(fields: [ownerId], references: [id])
+  Message          Message[]
+}
+
+model Message {
+  id        String    @id @default(uuid())
+  data      Json
+  threadId  String    @map("thread_id")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @default(now()) @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  Thread Thread @relation(fields: [threadId], references: [id])
+}
+
+model Workspace {
+  id              String    @id @default(uuid())
+  name            String
+  avatar          String?
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @default(now()) @updatedAt @map("updated_at")
+  deletedAt       DateTime? @map("deleted_at")
+  assistantId     String?   @map("assistant_id")
+  workspaceMemory Json?     @map("workspace_memory")
+
+  Dashboard     Dashboard[]
+  DataSource    DataSource[]
+  UserWorkspace UserWorkspace[]
+}
+
+model Report {
+  id             String        @id @default(uuid())
+  name           String
+  description    String?
+  dataSourceId   String        @map("datasource_id")
+  ownerId        String        @map("owner_id")
+  threadId       String?       @map("thread_id")
+  location       String?
+  workspaceId    String        @map("workspace_id")
+  display        ReportDisplay
+  arguments      Json?
+  customizations Json?
+  query          String
+  createdAt      DateTime      @default(now()) @map("created_at")
+  updatedAt      DateTime      @default(now()) @updatedAt @map("updated_at")
+  deletedAt      DateTime?     @map("deleted_at")
+  dataSource     DataSource    @relation(fields: [dataSourceId], references: [id])
+  owner          User          @relation(fields: [ownerId], references: [id])
+  thread         Thread?       @relation(fields: [threadId], references: [id])
+}
+
+model Dashboard {
+  id          String    @id @default(uuid())
+  name        String
+  ownerId     String    @map("owner_id")
+  workspaceId String    @map("workspace_id")
+  widgets     Json?
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @default(now()) @updatedAt @map("updated_at")
+  deletedAt   DateTime? @map("deleted_at")
+  owner       User      @relation(fields: [ownerId], references: [id])
+  workspace   Workspace @relation(fields: [workspaceId], references: [id])
+}
+
+model User {
+  id          String    @id @default(uuid())
+  email       String    @unique
+  avatar      String?
+  name        String?
+  createdAt   DateTime? @default(now()) @map("created_at")
+  updatedAt   DateTime  @default(now()) @updatedAt @map("updated_at")
+  deletedAt   DateTime? @map("deleted_at")
+  shouldSetup Boolean   @default(true) @map("should_setup")
+  userMemory  Json?     @map("user_memory")
+
+  Dashboard     Dashboard[]
+  DataSource    DataSource[]
+  Report        Report[]
+  Thread        Thread[]
+  UserWorkspace UserWorkspace[]
+}
+
+model UserWorkspace {
+  id          String    @id @default(uuid())
+  userId      String    @map("user_id")
+  workspaceId String    @map("workspace_id")
+  createdAt   DateTime? @default(now()) @map("created_at")
+  updatedAt   DateTime? @default(now()) @updatedAt @map("updated_at")
+  User        User      @relation(fields: [userId], references: [id])
+  Workspace   Workspace @relation(fields: [workspaceId], references: [id])
+
+  @@unique([userId, workspaceId])
+}
+
+model QueryLog {
+  id               String  @id @default(uuid())
+  prompt           String
+  query            String
+  success          Boolean
+  errorMessage     String? @map("error_message")
+  negativeFeedback String? @map("negative_feedback")
+  positiveFeedback String? @map("positive_feedback")
+  useAsExample     Boolean @default(true) @map("use_as_example")
+  workspaceId      String  @map("workspace_id")
+  dataSourceId     String  @map("datasource_id")
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @default(now()) @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+}
+
+model MessageLog {
+  id               String  @id @default(uuid())
+  prompt           String
+  response         String?
+  negativeFeedback String? @map("negative_feedback")
+  positiveFeedback String? @map("positive_feedback")
+  useAsExample     Boolean @default(false) @map("use_as_example")
+  workspaceId      String  @map("workspace_id")
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @default(now()) @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+}
+
+enum Engines {
+  Postgres
+  Mongo
+  Sheets
+  BigQuery
+}
+
+enum ReportDisplay {
+  line
+  bar
+  pie
+  table
+  number
+  doughnut
+  polararea
+}

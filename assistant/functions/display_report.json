@@ -1,0 +1,88 @@
+{
+  "name": "display_report",
+  "description": "Display a report from the results of a SQL query.",
+  "strict": false,
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "report_type": {
+        "type": "string",
+        "description": "The type of report to display.",
+        "enum": [
+          "line",
+          "bar",
+          "pie",
+          "table",
+          "number",
+          "doughnut",
+          "polararea"
+        ]
+      },
+      "query": {
+        "type": "string",
+        "description": "The SQL query to be executed. Remember the instructions of reports query."
+      },
+      "report_name": {
+        "type": "string",
+        "description": "The name of the report to display. In English."
+      },
+      "report_description": {
+        "type": "string",
+        "description": "The description of the report to display. In English."
+      },
+      "datasets": {
+        "type": "array",
+        "description": "The array with the datasets to display. Required for line, bar, pie, doughnut and polararea reports.",
+        "items": {
+          "type": "object",
+          "properties": {
+            "label": {
+              "type": "string",
+              "description": "The label of the dataset."
+            },
+            "data": {
+              "type": "string",
+              "description": "The sql result key to be used as data."
+            },
+            "fill": {
+              "type": "boolean",
+              "description": "If the dataset should be filled. Default false"
+            },
+            "type": {
+              "type": "string",
+              "description": "The type of the dataset. line, bar, pie, doughnut, polararea"
+            }
+          }
+        }
+      },
+      "labels": {
+        "type": "string",
+        "description": "The sql result key to be used as labels. Required for line, bar, pie, doughnut and polararea reports."
+      },
+      "indexAxis": {
+        "type": "string",
+        "description": "The index axis to be used in the chart. Default x",
+        "enum": ["x", "y"]
+      },
+      "xStacked": {
+        "type": "boolean",
+        "description": "If the x axis is stacked. Default false"
+      },
+      "yStacked": {
+        "type": "boolean",
+        "description": "If the y axis is stacked. Default false"
+      },
+      "dataSourceId": {
+        "type": "string",
+        "description": "The data source id to be used. Default the first data source."
+      }
+    },
+    "required": [
+      "query",
+      "report_type",
+      "report_name",
+      "report_description",
+      "dataSourceId"
+    ]
+  }
+}

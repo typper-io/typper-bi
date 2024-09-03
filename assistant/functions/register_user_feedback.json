@@ -1,0 +1,37 @@
+{
+  "name": "register_user_feedback",
+  "description": "Register a user's positive or negative feedback",
+  "strict": false,
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "intent": {
+        "type": "string",
+        "description": "The intent of the feedback",
+        "enum": ["positive", "negative"]
+      },
+      "feedback": {
+        "type": "string",
+        "description": "The feedback message"
+      },
+      "query_log_id": {
+        "type": "string",
+        "description": "If the feedback involves a query, the involved query log ID"
+      },
+      "response": {
+        "type": "string",
+        "description": "If the feedback involves a response, the involved response"
+      },
+      "prompt": {
+        "type": "string",
+        "description": "If the feedback involves a response, the involved prompt"
+      },
+      "type": {
+        "type": "string",
+        "description": "The type of the feedback",
+        "enum": ["query", "response"]
+      }
+    },
+    "required": ["intent", "feedback", "type"]
+  }
+}

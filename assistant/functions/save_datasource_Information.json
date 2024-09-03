@@ -1,0 +1,19 @@
+{
+  "name": "save_datasource_information",
+  "description": "Save new datasource information provided on chat",
+  "strict": false,
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "information": {
+        "type": "string",
+        "description": "The datasource information to save"
+      },
+      "data_source_id": {
+        "type": "string",
+        "description": "The datasource id to save the information to"
+      }
+    },
+    "required": ["information", "data_source_id"]
+  }
+}

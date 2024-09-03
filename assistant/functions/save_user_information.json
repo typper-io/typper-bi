@@ -1,0 +1,15 @@
+{
+  "name": "save_user_information",
+  "description": "Save some user information provided on chat",
+  "strict": false,
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "information": {
+        "type": "string",
+        "description": "The information to save"
+      }
+    },
+    "required": ["information"]
+  }
+}
