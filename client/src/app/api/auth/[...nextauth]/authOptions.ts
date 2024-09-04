@@ -22,20 +22,6 @@ const authOptions: AuthOptions = {
     signOut: '/',
     verifyRequest: '/',
   },
-  cookies: {
-    ...(!isDev && {
-      sessionToken: {
-        name: `__Secure-next-auth.session-token`,
-        options: {
-          httpOnly: true,
-          sameSite: 'none',
-          path: '/',
-          domain,
-          secure: true,
-        },
-      },
-    }),
-  },
 }
 
 export default authOptions
