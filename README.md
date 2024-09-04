@@ -37,6 +37,10 @@ Follow the steps below to set up the project locally.
    npx prisma migrate deploy
    ```
 
+4. Access
+
+   - **Client**: [http://localhost:3000](http://localhost:3000)
+
 ## 🛠️ Technologies Used
 
 For client:
