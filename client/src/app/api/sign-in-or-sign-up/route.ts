@@ -8,7 +8,7 @@ export const GET = async (req: any) => {
   const searchParams = req.nextUrl.searchParams
   const callbackUrl = searchParams.get('callbackUrl')
 
-  const session = await getServerSession(authOptions)
+  const session = await getServerSession(authOptions())
 
   const appUrl =
     process.env.NODE_ENV === 'development'

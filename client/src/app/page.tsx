@@ -6,7 +6,7 @@ import { UserAuthForm } from '@/components/user-auth-form'
 import authOptions from '@/app/api/auth/[...nextauth]/authOptions'
 
 export default async function AuthenticationPage() {
-  const session = await getServerSession(authOptions)
+  const session = await getServerSession(authOptions())
 
   if (session?.user) {
     return redirect('/app/chat')

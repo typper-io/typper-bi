@@ -1,10 +1,10 @@
 import { AuthOptions } from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
 
-const isDev = true
-const domain = 'localhost'
+const isDev = process.env.NODE_ENV === 'development'
+const domain = isDev ? 'localhost' : process.env.APP_DOMAIN
 
-const authOptions: AuthOptions = {
+const authOptions: () => AuthOptions = () => ({
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
@@ -22,6 +22,20 @@ const authOptions: AuthOptions = {
     signOut: '/',
     verifyRequest: '/',
   },
-}
+  cookies: {
+    ...(!isDev && {
+      sessionToken: {
+        name: `__Secure-next-auth.session-token`,
+        options: {
+          httpOnly: true,
+          sameSite: 'none',
+          path: '/',
+          domain,
+          secure: true,
+        },
+      },
+    }),
+  },
+})
 
 export default authOptions
