@@ -30,15 +30,22 @@ Follow the steps below to set up the project locally.
    docker compose up
    ```
 
+3. **Deploy migrations with prisma**
+
+   ```bash
+   cd server
+   npx prisma migrate deploy
+   ```
+
 ## 🛠️ Technologies Used
 
-For frontend:
+For client:
 
 - **Next.js**: A React framework for building modern, high-performance web applications.
 - **React**: A JavaScript library for building user interfaces.
 - **CSS Modules/TailwindCSS**: For styling the interface.
 
-For backend:
+For server:
 
 - **NestJS**: A progressive Node.js framework for building efficient, reliable, and scalable server-side applications.
 - **OpenAI GPT**: Integration with OpenAI's GPT API for AI-powered assistance.

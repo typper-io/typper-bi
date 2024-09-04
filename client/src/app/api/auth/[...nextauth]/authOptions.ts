@@ -22,11 +22,6 @@ const authOptions: AuthOptions = {
     signOut: '/',
     verifyRequest: '/',
   },
-  callbacks: {
-    signIn: (args) => {
-      return true
-    },
-  },
   cookies: {
     ...(!isDev && {
       sessionToken: {
