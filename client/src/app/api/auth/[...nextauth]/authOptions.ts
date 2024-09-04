@@ -1,8 +1,8 @@
 import { AuthOptions } from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
 
-const isDev = process.env.NODE_ENV === 'development'
-const domain = isDev ? 'localhost' : process.env.APP_DOMAIN
+const isDev = true
+const domain = 'localhost'
 
 const authOptions: AuthOptions = {
   providers: [
