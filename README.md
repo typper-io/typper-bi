@@ -4,7 +4,7 @@ We believe in empowering businesses with an **AI-enhanced approach to data insig
 
 ## 📄 Documentation
 
-[here]([https://docs.bi.typper.io/introduction](https://typper.mintlify.app/introduction))
+[here](https://typper.mintlify.app/introduction)
 
 ## 🚀 Features
 
