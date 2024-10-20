@@ -16,6 +16,10 @@ jobs:
       contents: read
       packages: write
 
+    strategy:
+      matrix:
+        app: [client, server]
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -27,32 +31,17 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Extract metadata (tags, labels) for Client Docker image
-        id: meta-client
+      - name: Extract metadata (tags, labels) for Docker image
+        id: meta
         uses: docker/metadata-action@v4
         with:
-          images: ${{ env.REGISTRY }}/${{ env.CLIENT_IMAGE_NAME }}
+          images: ${{ env.REGISTRY }}/${{ github.repository }}-${{ matrix.app }}
 
-      - name: Build and push Client Docker image
+      - name: Build and push Docker image
         uses: docker/build-push-action@v4
         with:
-          context: ./client
-          file: ./client/Dockerfile
+          context: ./${{ matrix.app }}
+          file: ./${{ matrix.app }}/Dockerfile
           push: true
-          tags: ${{ steps.meta-client.outputs.tags }}
-          labels: ${{ steps.meta-client.outputs.labels }}
-
-      - name: Extract metadata (tags, labels) for Server Docker image
-        id: meta-server
-        uses: docker/metadata-action@v4
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.SERVER_IMAGE_NAME }}
-
-      - name: Build and push Server Docker image
-        uses: docker/build-push-action@v4
-        with:
-          context: ./server
-          file: ./server/Dockerfile
-          push: true
-          tags: ${{ steps.meta-server.outputs.tags }}
-          labels: ${{ steps.meta-server.outputs.labels }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
