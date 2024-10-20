@@ -65,6 +65,8 @@ export default function URL() {
     const regexBySourceType: Record<string, RegExp> = {
       Postgres:
         /^postgresql:\/\/([^:\/\s]+):([^@\/\s]+)@([^:\/\s]+):(\d+)\/(\w+)(\?.*)?$/,
+      Redshift:
+        /^redshift:\/\/([^:\/\s]+):([^@\/\s]+)@([^:\/\s]+):(\d+)\/(\w+)(\?.*)?$/,
       MongoDB:
         /^mongodb\+srv:\/\/[a-zA-Z0-9]+:[a-zA-Z0-9]+@([a-zA-Z0-9]+-)*[a-zA-Z0-9]+\.[a-zA-Z0-9]+\/[a-zA-Z0-9]+(\?.*)?$/,
       'Google Sheets':
@@ -73,6 +75,7 @@ export default function URL() {
 
     const exampleValidUrl: Record<string, string> = {
       Postgres: 'postgresql://username:password@hostname:port/database',
+      Redshift: 'redshift://username:password@hostname:port/database',
       MongoDB: 'mongodb+srv://username:password@hostname:port/database',
       'Google Sheets':
         'https://docs.google.com/spreadsheets/d/spreadsheetsid/edit#gid=0',
@@ -267,6 +270,7 @@ export default function URL() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="Postgres">Postgres</SelectItem>
+                <SelectItem value="Redshift">Redshift</SelectItem>
                 <SelectItem value="MongoDB">MongoDB</SelectItem>
                 <SelectItem value="Google Sheets">Google Sheets</SelectItem>
                 <SelectItem value="BigQuery">BigQuery</SelectItem>
@@ -290,6 +294,8 @@ export default function URL() {
                     ? 'mongodb+srv://username:password@hostname:port/database'
                     : sourceType === 'Google Sheets'
                     ? 'https://docs.google.com/spreadsheets/d/spreadsheetsid/edit#gid=0'
+                    : sourceType === 'Redshift'
+                    ? 'redshift://username:password@hostname:port/database'
                     : 'postgresql://username:password@hostname:port/database'
                 }
                 {...register('url')}

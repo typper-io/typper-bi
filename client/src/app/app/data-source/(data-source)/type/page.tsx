@@ -11,6 +11,10 @@ export default function TypePage() {
       icon: '/logos/postgres.svg',
     },
     {
+      name: 'Redshift',
+      icon: '/logos/redshift.svg',
+    },
+    {
       name: 'BigQuery',
       icon: '/logos/bigquery.svg',
     },

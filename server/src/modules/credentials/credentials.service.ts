@@ -14,7 +14,7 @@ export class CredentialsService {
     provider: Engines
     credentials: any
   }) {
-    if (provider === 'Postgres') {
+    if (provider === 'Postgres' || provider === 'Redshift') {
       const { dataSourceName, password, port, host, user } = credentials
 
       return Promise.all([
@@ -70,7 +70,7 @@ export class CredentialsService {
     dataSourceId: string
     provider: Engines
   }): Promise<any> {
-    if (provider === 'Postgres') {
+    if (provider === 'Postgres' || provider === 'Redshift') {
       const dataSourceSecrets = await Promise.all([
         this.getSecretValue({
           SecretId: `${process.env.AWS_SSM_SECRET_PREFIX}-${dataSourceId}-user`,
@@ -129,7 +129,7 @@ export class CredentialsService {
     dataSourceId: string
     provider: Engines
   }) {
-    if (provider === 'Postgres') {
+    if (provider === 'Postgres' || provider === 'Redshift') {
       return Promise.all([
         this.deleteSecret({
           SecretId: `${process.env.AWS_SSM_SECRET_PREFIX}-${dataSourceId}-user`,

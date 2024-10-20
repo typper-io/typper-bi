@@ -513,7 +513,7 @@ export class AppService {
       return []
     }
 
-    if (provider === 'Postgres') {
+    if (provider === 'Postgres' || provider === 'Redshift') {
       const result = await this.connectorService.runQueryByProvider({
         query: `
         SELECT column_name as name
@@ -603,13 +603,11 @@ export class AppService {
     url,
     workspace,
     user,
-    mongoDBFeatureIsEnabled,
     provider: bodyProvider,
     file,
   }: CreateDataSourceDto & {
     workspace: IWorkspace
     user: User
-    mongoDBFeatureIsEnabled: boolean
     file: Express.Multer.File
   }) {
     const { id: userId } = user
@@ -693,6 +691,8 @@ export class AppService {
     if (provider === 'postgresql') return Engines.Postgres
 
     if (provider === 'mongodb') return Engines.Mongo
+
+    if (provider === 'redshift') return Engines.Redshift
   }
 
   private splitUrlInCredentials({
