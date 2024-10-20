@@ -14,7 +14,7 @@ import {
 } from 'react'
 
 import { ReportTypePicker } from '@/app/app/reports/[reportId]/components/report-type-picker'
-import { Report } from '@/app/app/reports/page'
+import type { Report as ReportType } from '@/app/app/reports/page'
 import { BarChart } from '@/components/charts/bar'
 import { DoughnutChart } from '@/components/charts/doughnut'
 import { LineChart } from '@/components/charts/line'
@@ -222,7 +222,7 @@ export default function Report() {
   const { reportId } = useParams<{ reportId: string }>()
   const router = useRouter()
 
-  const [report, setReport] = useState<Report>()
+  const [report, setReport] = useState<ReportType>()
   const [loading, setLoading] = useState(true)
   const [filterValues, setFilterValues] = useState<Record<string, any>>({})
   const [queryResult, setQueryResult] = useState<Array<Record<string, any>>>([])
