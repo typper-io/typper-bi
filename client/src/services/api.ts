@@ -1,13 +1,22 @@
 import axios, { AxiosError } from 'axios'
 import { signOut } from 'next-auth/react'
 
-const baseURL =
-  process.env.NODE_ENV === 'development'
-    ? 'http://localhost:3001/backend'
-    : `https://${process.env.NEXT_PUBLIC_APP_DOMAIN}/backend`
+const getBaseURL = () => {
+  if (process.env.NODE_ENV === 'development') {
+    return 'http://localhost:3001/backend'
+  }
+
+  const appDomain = process.env.APP_DOMAIN
+
+  if (!appDomain) {
+    return '/backend'
+  }
+
+  return `https://${appDomain}/backend`
+}
 
 export const api = axios.create({
-  baseURL,
+  baseURL: getBaseURL(),
   transformRequest: axios.defaults.transformRequest,
   transformResponse: axios.defaults.transformResponse,
   withCredentials: true,
