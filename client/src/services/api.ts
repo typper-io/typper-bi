@@ -4,7 +4,7 @@ import { signOut } from 'next-auth/react'
 const baseURL =
   process.env.NODE_ENV === 'development'
     ? 'http://localhost:3001/backend'
-    : `https://${process.env.APP_DOMAIN}/backend`
+    : `https://${process.env.NEXT_PUBLIC_APP_DOMAIN}/backend`
 
 export const api = axios.create({
   baseURL,
