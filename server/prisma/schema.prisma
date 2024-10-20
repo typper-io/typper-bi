@@ -170,6 +170,7 @@ enum Engines {
   Mongo
   Sheets
   BigQuery
+  Redshift
 }
 
 enum ReportDisplay {

@@ -87,7 +87,7 @@ export class ConnectorService {
       return rows
     }
 
-    if (provider === 'Postgres') {
+    if (provider === 'Postgres' || provider === 'Redshift') {
       const pool = new Pool({
         host: credentials.host,
         database: credentials.dataSourceName,
@@ -288,7 +288,7 @@ export class ConnectorService {
       return result
     }
 
-    if (provider === 'Postgres') {
+    if (provider === 'Postgres' || provider === 'Redshift') {
       const result = await this.runQueryByProvider({
         query: `
         SELECT table_schema as name
@@ -327,7 +327,7 @@ export class ConnectorService {
       await client.disconnect()
     }
 
-    if (provider === 'Postgres') {
+    if (provider === 'Postgres' || provider === 'Redshift') {
       const pool = new Pool({
         host: credentials.host,
         database: credentials.dataSourceName,
@@ -466,7 +466,7 @@ export class ConnectorService {
       return columns.flatMap((column) => column)
     }
 
-    if (provider === 'Postgres') {
+    if (provider === 'Postgres' || provider === 'Redshift') {
       const result = await this.runQueryByProvider({
         query: `
         SELECT table_name, column_name, data_type, table_schema, udt_name
@@ -671,7 +671,7 @@ export class ConnectorService {
     dataSourceId: string
     schemaName?: string
   }) {
-    if (provider === 'Postgres') {
+    if (provider === 'Postgres' || provider === 'Redshift') {
       return this.runQueryByProvider({
         query: `SELECT ${columnName} FROM "${tableName}" LIMIT 1`,
         dataSourceId,

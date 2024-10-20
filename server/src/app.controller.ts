@@ -137,7 +137,6 @@ export class AppController {
     @Body() body: CreateDataSourceDto,
     @User() user: PrismaUser,
     @Workspace() workspace: IWorkspace,
-    mongoDBFeatureIsEnabled: boolean,
     @Response() response: ExpressResponse,
     @UploadedFile() file: Express.Multer.File,
   ) {
@@ -153,7 +152,6 @@ export class AppController {
       ...body,
       user,
       workspace,
-      mongoDBFeatureIsEnabled,
       file,
     })
 

@@ -171,6 +171,7 @@ export default function DataSource() {
 
   const logosByEngine: Record<string, string> = {
     Postgres: '/logos/postgres.svg',
+    Redshift: '/logos/redshift.svg',
     Mongo: '/logos/mongodb.svg',
     Sheets: '/logos/sheets.svg',
     BigQuery: '/logos/bigquery.svg',

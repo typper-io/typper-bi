@@ -96,7 +96,7 @@ export function useAssistant({
   const [error, setError] = useState<undefined | Error>(undefined)
 
   const sendMessage = async (text?: string) => {
-    if (!input || status !== 'awaiting_message') {
+    if ((!input && !text) || status !== 'awaiting_message') {
       return
     }
 

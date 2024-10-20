@@ -12,8 +12,6 @@ import { PrismaService } from 'src/modules/prisma/prisma.service'
 import { wrapQuery } from 'src/utils/wrap-query'
 import { Logger } from 'winston'
 import { IWorkspace } from 'src/interfaces/workspace'
-import { REQUEST } from '@nestjs/core'
-import { getYearAndMonth } from 'src/utils/get-year-and-month'
 import * as zod from 'zod'
 import {
   DisplayReportType,
@@ -342,7 +340,6 @@ export class ThreadService {
       runStream,
       threadId: externalThread.id,
       internalThreadId: internalThread.id,
-      workspaceId: workspace.workspaceId,
     })
 
     assistantResponse.pipe(response, { end: false })
@@ -355,12 +352,10 @@ export class ThreadService {
     runStream,
     threadId,
     internalThreadId,
-    workspaceId,
   }: {
     runStream: AssistantStream
     threadId: string
     internalThreadId: string
-    workspaceId: string
   }) {
     while (!runStream.currentRun()) {
       await new Promise((resolve) => setTimeout(resolve, 2000))
@@ -488,15 +483,6 @@ export class ThreadService {
         createdAt: new Date(message.created_at * 1000),
       })),
     })
-
-    // @ts-ignore
-    const usage = run.usage as {
-      prompt_tokens: number
-      completion_tokens: number
-      total_tokens: number
-    }
-
-    const { month, year } = getYearAndMonth()
   }
 
   private async saveUserInformation({
@@ -841,20 +827,33 @@ export class ThreadService {
         }
       }
 
-      let part = `As data analysis expert, give the necessary SQL to this prompt "${natural_language_query}"\n`
+      let system = 'You are a data analysis expert.'
+
+      system += '<instructions>\n'
+      system += '1. Give the necessary SQL to user prompt.\n'
+      system += '2. If the previous query failed, fix the error.\n'
+      system += '3. Always use database schema in the query.\n'
+      system +=
+        '4. Create the most generic query possible, because the user can make mistakes in information.\n'
+      system +=
+        '5. Prefer use ID, if don\t have an ID, use ilike for text fields with a single part of the text using %.\n'
+      system += '</instructions>\n'
+
+      let userMsg = ''
+      userMsg += `<prompt>${natural_language_query}</prompt>\n`
 
       if (count > 0) {
-        part += `The previous query "${previousQuery}" returned this error "${errorMessage}"\n`
+        userMsg += `<query_with_error>${previousQuery}</query_with_error>\n<error_message>${errorMessage}</error_message>\n`
       }
 
-      part += `The dataSource engine is: "${dataSource.engine}"\n`
+      userMsg += `<datasource_engine>${dataSource.engine}</datasource_engine>\n`
 
       if (dataSource.dataSourceMemory) {
-        part += `The dataSource annotations is: "${dataSource.dataSourceMemory}"\n`
+        userMsg += `<datasource_memory>${dataSource.dataSourceMemory}</datasource_memory>\n`
       }
 
       if (dataSource.context) {
-        part += `The dataSource context is: "${dataSource.context}"\n`
+        userMsg += `<datasource_context>${dataSource.context}</datasource_context>\n`
       }
 
       const relatedQueries = await this.semanticSearchByRelatedQueries({
@@ -870,13 +869,14 @@ export class ThreadService {
           })
           .join('\n')
 
-        part += `Example of queries: "${relatedQueriesText}"\n`
+        userMsg += `<example_queries>"${relatedQueriesText}"</example_queries>\n`
       }
 
       this.logger.info(
         `Running natural language query: ${natural_language_query}`,
         {
-          prompt: part,
+          systemPrompt: system,
+          userPrompt: userMsg,
         },
       )
 
@@ -885,37 +885,25 @@ export class ThreadService {
         schema: JSON.parse(dataSource.schema as string),
       })
 
-      part += `The dataSource schema is: "${JSON.stringify(handledSchema)}"\n`
+      const stringifiedSchema = JSON.stringify(handledSchema)
 
-      let rawMessage: string
+      userMsg += `<data_source_schema>${stringifiedSchema}</data_source_schema>\n`
 
-      try {
-        const message = await this.anthropicAI.messages.create({
-          max_tokens: 4096,
-          messages: [{ role: 'user', content: part }],
-          model: 'claude-3-5-sonnet-20240620',
-        })
+      const completion = await this.openai.chat.completions.create({
+        messages: [
+          {
+            role: 'system',
+            content: system,
+          },
+          {
+            role: 'user',
+            content: userMsg,
+          },
+        ],
+        model: 'gpt-4o-mini',
+      })
 
-        rawMessage =
-          message.content[0].type === 'text' ? message.content[0].text : ''
-      } catch (error) {
-        const completion = await this.openai.chat.completions.create({
-          messages: [
-            {
-              role: 'system',
-              content:
-                'You are a data analysis expert. Provide the necessary SQL for the given prompt.',
-            },
-            {
-              role: 'user',
-              content: part,
-            },
-          ],
-          model: 'gpt-4o-mini',
-        })
-
-        rawMessage = completion.choices[0].message.content || ''
-      }
+      const rawMessage = completion.choices[0].message.content || ''
 
       let rows: Array<any> = []
 
@@ -952,7 +940,7 @@ export class ThreadService {
           },
         })
       } catch (error: any) {
-        this.logger.error(error)
+        this.logger.error(error.message)
 
         await this.prismaService.queryLog.update({
           where: {
@@ -993,7 +981,7 @@ export class ThreadService {
         assistant: JSON.stringify({ query, rows, queryLogId: queryLog.id }),
       }
     } catch (error) {
-      this.logger.error(error)
+      this.logger.error(error.message)
 
       return { assistant: JSON.stringify({ error: error.message }) }
     }
