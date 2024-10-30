@@ -5,8 +5,11 @@ import { ValidationPipe } from '@nestjs/common'
 import * as cookieParser from 'cookie-parser'
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston'
 import helmet from 'helmet'
+import tracer from 'dd-trace'
 
 async function bootstrap() {
+  tracer.init({ logInjection: true })
+
   const app = await NestFactory.create(AppModule)
 
   app.use(helmet())
