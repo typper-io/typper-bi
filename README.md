@@ -116,10 +116,6 @@ The project uses environment variables to store sensitive information and config
 
 - **Purpose:** The initialization vector used in conjunction with the encryption key to encrypt data. It adds randomness to the encryption process, making it more secure.
 
-### ANTHROPIC_API_KEY
-
-- **Purpose:** The API key for accessing Anthropic’s services, which may include AI or machine learning APIs.
-
 ### EMAIL_DOMAIN
 
 - **Purpose:** The domain used for sending emails from the application. This is often used to set the "from" address in email communications.

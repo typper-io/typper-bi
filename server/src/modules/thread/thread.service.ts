@@ -34,7 +34,6 @@ import { handleSchema } from 'src/utils/handle-schema'
 import { sleep } from 'src/utils/sleep'
 import { MessageCreateParams } from 'openai/resources/beta/threads/messages'
 import { SemanticSearchService } from 'src/modules/semantic-search/semantic-search.service'
-import Anthropic from '@anthropic-ai/sdk'
 import { AssistantStream } from 'openai/lib/AssistantStream'
 
 interface FunctionToolBaseArguments {
@@ -48,7 +47,6 @@ type FunctionToolArguments<F> = FunctionToolBaseArguments & F
 @Injectable({ scope: Scope.REQUEST })
 export class ThreadService {
   private openai: OpenAI
-  private anthropicAI: Anthropic
 
   constructor(
     private readonly prismaService: PrismaService,
@@ -57,9 +55,6 @@ export class ThreadService {
     private readonly semanticSearchService: SemanticSearchService,
   ) {
     this.openai = new OpenAI()
-    this.anthropicAI = new Anthropic({
-      apiKey: process.env.ANTHROPIC_API_KEY,
-    })
   }
 
   async runThreadMessage({
